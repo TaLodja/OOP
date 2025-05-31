@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <cmath>
 using namespace std;
 
 class Point
@@ -54,7 +55,23 @@ public:
 	{
 		cout << "X = " << get_x() << "\tY = " << get_y() << endl;
 	}
+
+	double distance(Point Point)const
+	{
+		double x1 = Point.x;
+		double y1 = Point.y;
+		return sqrt(pow(get_x() - x1, 2) + pow(get_y() - y1, 2));
+	}
 };
+
+double distance(Point Point1, Point Point2)
+{
+	double x1 = Point1.get_x();
+	double x2 = Point2.get_x();
+	double y1 = Point1.get_y();
+	double y2 = Point2.get_y();
+	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+}
 
 //#define STRUCT_POINT
 
@@ -82,9 +99,18 @@ void main()
 	A.print();
 
 	Point B = 5;
-	////cout << B.get_x() << "\t" << B.get_y() << endl;
+	//cout << B.get_x() << "\t" << B.get_y() << endl;
 	B.print();
 
 	Point C(7, 8);
 	C.print();
+
+	cout << endl;
+	cout << "Определение расстояния до указанной точки" << endl;
+	cout << "Расстояние до указанной точки: " << A.distance(C) << endl; //т.С - заданная точкаб т.А - указанная точка
+
+	cout << endl;
+	cout << "Определение расстояние между двумя точками" << endl;
+	cout << "Расстояние между двумя точками: "<<distance(A, C) << endl;
+
 }
