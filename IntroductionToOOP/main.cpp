@@ -2,8 +2,12 @@
 //#include <cmath>
 using namespace std;
 
+#define delimiter "\n--------------------------------------\n"
+
+//#define DISTANCE_CHECK
 //#define CONSTRUCTORS_CHECK
-#define DISTANCE_CHECK
+//#define ASSIGMENT_CHECK
+
 
 class Point
 {
@@ -47,16 +51,40 @@ public:
 		(*this).y = y;
 		cout << "Constructor:\t\t" << this << endl;
 	}
+
+	Point(const Point& other)
+	{
+		// this  - этот объект
+		// other - тот объект
+		this ->x = other.x;
+		this ->y = other.y;
+		cout << "CopyConstructor:\t\t" << this << endl;
+	}
+	 
+	//Point(const Point& other) = delete;	//Удаляем контструктор копирования, и таким образом запрещаем копирование объектов
 	//Destructor
 	~Point()
 	{
 		cout << "Destructor:\t" << this << endl;
 	}
 
-	//Methods
+	//Operators
+	Point& operator=(const Point& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		return *this;
+	}
 
-	// Разбор в классе
-	double distance(Point other) //other - точка, до коорой находим расстояние
+	Point& operator++()
+	{
+		this->x++;
+		this->y++;
+		return *this;
+	}
+
+	//Methods
+	double distance(const Point& other)const //other - точка, до коорой находим расстояние
 	{
 		double x_distance = this->x - other.x;
 		double y_distance = this->y - other.y;
@@ -65,38 +93,27 @@ public:
 		return distance;
 	}
 
-	// Мой вариант
-	/*double distance(Point Point)const
-	{
-		double x1 = Point.x;
-		double y1 = Point.y;
-		return sqrt(pow(get_x() - x1, 2) + pow(get_y() - y1, 2));
-	}*/
-
 	void print()const
 	{
 		cout << "X = " << get_x() << "\tY = " << get_y() << endl;
 	}
 };
 
-//Решение в классе
-
-double distance(Point A, Point B)
+double distance(const Point& A, const Point& B)
 {
+	//B.set_y(
 	double x_distance = A.get_x() - B.get_x();
 	double y_distance = A.get_y() - B.get_y();
 	return sqrt(x_distance * x_distance + y_distance * y_distance);
 }
 
-//Решение дома
-//double distance(Point Point1, Point Point2)
-//{
-//	double x1 = Point1.get_x();
-//	double x2 = Point2.get_x();
-//	double y1 = Point1.get_y();
-//	double y2 = Point2.get_y();
-//	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
-//}
+Point operator+(const Point& left, const Point& right)
+{
+	Point result;
+	result.set_x(left.get_x() + right.get_x());
+	result.set_y(left.get_y() + right.get_y());
+	return result;
+}
 
 //#define STRUCT_POINT
 
@@ -117,6 +134,35 @@ void main()
 	cout << pA->x << "\t" << pA->y << endl;
 #endif // STRUCT_POINT
 
+
+#ifdef DISTANCE_CHECK
+	Point A(2, 3);
+	Point B(7, 8);
+	A.print();
+	B.print();
+
+	cout << delimiter << endl;
+	cout << "Расстояние от точки 'A' до точки 'B': " << A.distance(B) << endl;
+	cout << delimiter << endl;
+	cout << "Расстояние от точки 'B' до точки 'A': " << B.distance(A) << endl;
+	cout << delimiter << endl;
+	cout << "Расстояние между точками 'A' и 'B': " << distance(A, B) << endl;
+	cout << delimiter << endl;
+	cout << "Расстояние между точками 'B' и 'A': " << distance(B, A) << endl;
+	cout << delimiter << endl;
+	cout << sizeof(Point) << endl;
+
+	//Решение дома
+	//cout << endl;
+	//cout << "Определение расстояния до указанной точки" << endl;
+	//cout << "Расстояние до указанной точки: " << A.distance(C) << endl; //т.С - заданная точка; т.А - указанная точка
+
+	//cout << endl;
+	//cout << "Определение расстояние между двумя точками" << endl;
+	//cout << "Расстояние между двумя точками: "<<distance(A, C) << endl;
+
+#endif // DISTANCE_CHECK
+
 #ifdef CONSTRUCTORS_CHECK
 	Point A;
 	//A.set_x(2);
@@ -130,26 +176,47 @@ void main()
 
 	Point C(7, 8);
 	C.print();
+
+	Point D = C;	//CopyConstructor
+	D.print();
+
+	Point E;		//Default Constructor
+	E = D;			//CopyAssignment
+	E.print();
+
+	/*int a = 2;
+	int b = 3;
+	a = b;
+	cout << a << endl;*/
+
 #endif // CONSTRUCTORS_CHECK
 
-	Point A(2, 3);
-	Point B(7, 8);
+#ifdef ASSIGMENT_CHECK
+	int a, b, c;
+	a = b = c = 0;
+	cout << a << "\t" << b << "\t" << c << endl;
+
+	//Point(2, 3); // Здесь мы явно вызываем конструктор, и таким образом создаем временный безымянный объект
+	cout << Point(2, 3).distance(Point(7, 8)) << endl;
+	//Временные безымянные объекты существуют только в пределах одного выражения
+	//Они удаляются из памяти после того, как выражение выполнилось.
+
+	Point A, B, C;
+
+	A = B = C = Point(2, 3);
+
 	A.print();
 	B.print();
+	C.print();
+#endif // ASSIGMENT_CHECK
 
-	cout << "Расстояние от точки 'A' до точки 'B': " << A.distance(B) << endl;
-	cout << "Расстояние от точки 'B' до точки 'A': " << B.distance(A) << endl;
+	Point A(2, 3);
+	Point B(4,5);
+	Point C = A + B;
+	C.print();
 
-	cout << "Расстояние между точками 'A' и 'B': " << distance(A, B) << endl;
-	cout << "Расстояние между точками 'B' и 'A': " << distance(B, A) << endl;
-	
-	//Решение дома
-	//cout << endl;
-	//cout << "Определение расстояния до указанной точки" << endl;
-	//cout << "Расстояние до указанной точки: " << A.distance(C) << endl; //т.С - заданная точка; т.А - указанная точка
-
-	//cout << endl;
-	//cout << "Определение расстояние между двумя точками" << endl;
-	//cout << "Расстояние между двумя точками: "<<distance(A, C) << endl;
-
+	for (Point i(2, 3); i.get_x() < 10; ++i)
+	{
+		i.print();
+	}
 }
