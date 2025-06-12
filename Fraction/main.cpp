@@ -235,32 +235,36 @@ Fraction operator/(Fraction& left, Fraction& right)
 	return result;
 }
 
-bool operator==(const Fraction& left, const Fraction& right)
+bool operator==(Fraction& left, Fraction& right)
 {
+	if (left.get_whole() != 0) left.incorrect_fraction();
+	if (right.get_whole() != 0) right.incorrect_fraction();
 	return (left.get_num() == right.get_num() && left.get_denom() == right.get_denom()) ? true : false;
 }
 
-bool operator!=(const Fraction& left, const Fraction& right)
+bool operator!=(Fraction& left, Fraction& right)
 {
 	return (left == right) ? false : true;
 }
 
-bool operator>(const Fraction& left, const Fraction& right)
+bool operator>(Fraction& left, Fraction& right)
 {
+	if (left.get_whole() != 0) left.incorrect_fraction();
+	if (right.get_whole() != 0) right.incorrect_fraction();
 	return (double(left.get_num() / left.get_denom()) > double(right.get_num() / right.get_denom())) ? true : false;
 }
 
-bool operator<(const Fraction& left, const Fraction& right)
+bool operator<(Fraction& left, Fraction& right)
 {
 	return (left > right) ? false : true;
 }
 
-bool operator>=(const Fraction& left, const Fraction& right)
+bool operator>=(Fraction& left, Fraction& right)
 {
 	return (left > right || left == right) ? true : false;
 }
 
-bool operator<=(const Fraction& left, const Fraction& right)
+bool operator<=(Fraction& left, Fraction& right)
 {
 	return (left >= right) ? false : true;
 }
@@ -271,11 +275,11 @@ void main()
 	int num1, num2, denom1, denom2;
 	cout << "Первая дробь: " << endl;
 	cin >> num1;
-	cout << "----" << endl;
+	cout << "---" << endl;
 	cin >> denom1;
 	cout << "Вторая дробь: " << endl;
 	cin >> num2;
-	cout << "----" << endl;
+	cout << "---" << endl;
 	cin >> denom2;
 
 	try
