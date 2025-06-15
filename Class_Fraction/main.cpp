@@ -287,7 +287,7 @@ std::istream& operator>>(std::istream& is, Fraction& obj)
 //#define CONSTRUCTORS_CHECK
 //#define ASSIGMENT_CHECK
 //#define ARITHMETICAL_OPERATORS
-//#define INCREMENT/DECREMENT
+//#define INCREMENT_DECREMENT
 //#define COMPARISON_OPERATORS
 #define OUTPUT_INPUT_CHECK
 
@@ -346,12 +346,12 @@ void main()
 	B.print();*/
 #endif // ARITHMETICAL_OPERATORS
 
-#ifdef INCREMENT/DECREMENT
+#ifdef INCREMENT_DECREMENT
 	Fraction A(1, 2);
-	Fraction B = A++;
+	Fraction B = --A;
 	A.print();
 	B.print();
-#endif // INCREMENT/DECREMENT
+#endif // INCREMENT_DECREMENT
 
 #ifdef COMPARISON_OPERATORS
 
