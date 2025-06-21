@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 using namespace std;
 using std::cout;
 
@@ -244,11 +245,15 @@ bool operator<(Fraction left, Fraction right)
 {
 	left.to_improper();
 	right.to_improper();
-	return (double)left.get_numerator() / left.get_denominator() < (double)right.get_numerator() / right.get_denominator();
+	return left.get_numerator() * right.get_denominator() <
+		right.get_numerator() * left.get_denominator();
 }
-bool operator>(const Fraction& left, const Fraction& right)
+bool operator>(Fraction left, Fraction right)
 {
-	return !(left < right);
+	left.to_improper();
+	right.to_improper();
+	return left.get_numerator() * right.get_denominator() >
+		right.get_numerator() * left.get_denominator();
 }
 bool operator<=(const Fraction& left, const Fraction& right)
 {
@@ -259,7 +264,7 @@ bool operator>=(const Fraction& left, const Fraction& right)
 	return !(left < right);
 }
 
-std::ostream& operator<<(std::ostream& os, const Fraction& obj)
+std::ostream& operator<<(std::ostream& os, const Fraction& obj) //os - output stream
 {
 	if (obj.get_integer()) os << obj.get_integer();
 	if (obj.get_numerator())
@@ -272,15 +277,34 @@ std::ostream& operator<<(std::ostream& os, const Fraction& obj)
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, Fraction& obj)
+std::istream& operator>>(std::istream& is, Fraction& obj)	//is - input stream
 {
-	char div = '/';
-	int numerator = 0, denominator = 1;
-	is >> numerator >> div >> denominator;
-	obj.set_integer(0);
-	obj.set_numerator(numerator);
-	obj.set_denominator(denominator);
-	(obj.reduct()).to_proper();
+	/*
+	5
+	1/2
+	2(3/4)
+	2 4/5
+	3.4/5
+	3,4/5
+	*/
+	
+	const int SIZE = 32;
+	char sz_input[SIZE] = {};		//sz_ - String Zero (Строка, заканчивающаяся нулем)
+	//is >> sz_input;
+	is.getline(sz_input, SIZE);		// Ввод строки с пробелами
+	cout << sz_input << endl;
+	const char delimiters[] = { '(', '/', ')', ' ', '.', ',', 0 };
+	int numbers[3] = {};
+	int n = 0;
+	for (char* pch = strtok(sz_input, delimiters); pch && n<3; pch = strtok(NULL, delimiters))			//strtok() - разбивает строку на последовательность токенов, разделенныйх символами-разделителями
+		numbers[n++] = atoi(pch);																//atoi() - преобразует строку в целое значение
+	for (int i = 0; i < n; i++) cout << numbers[i] << "\t"; cout << endl;
+	switch (n)
+	{
+	case 1:obj = numbers[0]; break;
+	case 2:obj = Fraction(numbers[0], numbers[1]); break;
+	case 3: obj = Fraction(numbers[0], numbers[1], numbers[2]);break;
+	}
 	return is;
 }
 
@@ -289,7 +313,7 @@ std::istream& operator>>(std::istream& is, Fraction& obj)
 //#define ARITHMETICAL_OPERATORS
 //#define INCREMENT_DECREMENT
 //#define COMPARISON_OPERATORS
-#define OUTPUT_INPUT_CHECK
+#define ISTREAM_OPERATOR
 
 void main()
 {
@@ -358,10 +382,10 @@ void main()
 	cout << (Fraction(1, 2) <= Fraction(5, 10)) << endl;
 #endif // COMPARISON_OPERATORS
 
-#ifdef OUTPUT_INPUT_CHECK
+#ifdef ISTREAM_OPERATOR
 	Fraction A;
 	cout << "Введите простую дробь: "; cin >> A;
-	cout << A << endl;
-#endif // OUTPUT_INPUT_CHECK
-
+	cout << delimiter << endl;
+	cout << A.to_proper() << endl;
+#endif // ISTREAM_OPERATOR
 }
