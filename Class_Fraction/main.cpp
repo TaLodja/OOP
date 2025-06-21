@@ -51,12 +51,16 @@ public:
 		this->denominator = 1;
 		cout << "DefaultConstructor:\t" << this << endl;
 	}
-	Fraction(int integer)
+	explicit Fraction(int integer)
 	{
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
-		cout << "Constructor:\t\t" << this << endl;
+		cout << "SingleArgumentConstructor:\t\t" << this << endl;
+	}
+	explicit Fraction(double decimal)
+	{
+
 	}
 	Fraction(int numerator, int denominator)
 	{
@@ -139,6 +143,15 @@ public:
 		Fraction old = *this;
 		integer--;
 		return old;
+	}
+	//Type-cast operators
+	operator int()const
+	{
+		return integer + numerator / denominator;
+	}
+	operator double()const
+	{
+		return integer + (double)numerator / denominator;
 	}
 	//Methods
 	Fraction& to_improper()		//Переводит дробь в неправильную (Целую часть интегрирует в числитель
@@ -301,7 +314,7 @@ std::istream& operator>>(std::istream& is, Fraction& obj)	//is - input stream
 	for (int i = 0; i < n; i++) cout << numbers[i] << "\t"; cout << endl;
 	switch (n)
 	{
-	case 1:obj = numbers[0]; break;
+	case 1:obj = Fraction(numbers[0]); break;
 	case 2:obj = Fraction(numbers[0], numbers[1]); break;
 	case 3: obj = Fraction(numbers[0], numbers[1], numbers[2]);break;
 	}
@@ -313,7 +326,10 @@ std::istream& operator>>(std::istream& is, Fraction& obj)	//is - input stream
 //#define ARITHMETICAL_OPERATORS
 //#define INCREMENT_DECREMENT
 //#define COMPARISON_OPERATORS
-#define ISTREAM_OPERATOR
+//#define ISTREAM_OPERATOR
+//#define CONVERSIONS_BASICS
+#define CONVERTION_FROM_OTHER_TO_CLASS
+//#define CONVERSION_FROM_CLASS_TO_OTHER
 
 void main()
 {
@@ -388,4 +404,36 @@ void main()
 	cout << delimiter << endl;
 	cout << A.to_proper() << endl;
 #endif // ISTREAM_OPERATOR
+
+#ifdef CONVERSIONS_BASICS
+	int a = 2;		//No conversions
+	double b = 3;	//Implicite Conversion from less to more ('int' to 'double')
+	int c = b;		//Implicite Conversion from more to less without data loss ('double' to 'int')
+	int d = 4.5;	//Implicite conversion from more to less with data loss  
+#endif // CONVERSIONS_BASICS
+
+#ifdef CONVERTION_FROM_OTHER_TO_CLASS
+	Fraction A = (Fraction)5;	//Implicit conversion from less to more ('int' to 'Fraction')
+	cout << A << endl;
+
+	Fraction B;
+	cout << delimiter << endl;
+	B = Fraction(8);
+	cout << delimiter << endl;
+	cout << B << endl;
+
+	Fraction C = 2.75;
+	cout << A << endl;
+#endif // CONVERTION_FROM_OTHER_TO_CLASS
+
+#ifdef CONVERSION_FROM_CLASS_TO_OTHER
+	Fraction A(2, 3, 4);
+	cout << A << endl;
+
+	int a = A;
+	cout << a << endl;
+	double b = A;
+	cout << b << endl;
+#endif // CONVERSION_FROM_CLASS_TO_OTHER
+
 }
