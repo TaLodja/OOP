@@ -1,4 +1,4 @@
-#include <iostream>
+п»ї#include <iostream>
 using namespace std;
 
 #define delimiter "\n----------------------------------\n"
@@ -8,8 +8,8 @@ String operator+(const String& left, const String& right);
 
 class String
 {
-	int size;	//Размер строки в Байтах
-	char* str;	//Указатель на строку в динамической памяти
+	int size;	//Р Р°Р·РјРµСЂ СЃС‚СЂРѕРєРё РІ Р‘Р°Р№С‚Р°С…
+	char* str;	//РЈРєР°Р·Р°С‚РµР»СЊ РЅР° СЃС‚СЂРѕРєСѓ РІ РґРёРЅР°РјРёС‡РµСЃРєРѕР№ РїР°РјСЏС‚Рё
 public:
 	int get_size()const
 	{
@@ -103,7 +103,7 @@ std::istream& operator>>(std::istream& is, String& obj)
 void main()
 {
 	setlocale(LC_ALL, "");
-	//String str1(5);			//explicit-конструктор нельзя вызвать оператором '=', но всегда можно вызвать при помощи круглых скобок
+	//String str1(5);			//explicit-РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РЅРµР»СЊР·СЏ РІС‹Р·РІР°С‚СЊ РѕРїРµСЂР°С‚РѕСЂРѕРј '=', РЅРѕ РІСЃРµРіРґР° РјРѕР¶РЅРѕ РІС‹Р·РІР°С‚СЊ РїСЂРё РїРѕРјРѕС‰Рё РєСЂСѓРіР»С‹С… СЃРєРѕР±РѕРє
 	//str1.info();
 	//cout << str1 << endl;
 
@@ -127,7 +127,7 @@ void main()
 	//cout << delimiter << endl;
 
 	//String str;
-	//cout << "Введите строку: "; cin >> str;
+	//cout << "Р’РІРµРґРёС‚Рµ СЃС‚СЂРѕРєСѓ: "; cin >> str;
 	//cout << str << endl;
 
 	//cout << delimiter << endl;
