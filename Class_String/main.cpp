@@ -3,6 +3,9 @@ using namespace std;
 
 #define delimiter "\n----------------------------------\n"
 
+class String;
+String operator+(const String& left, const String& right);
+
 class String
 {
 	int size;	//Размер строки в Байтах
@@ -57,6 +60,11 @@ public:
 		return *this;
 	}
 
+	String& operator+=(const String& other)
+	{
+		return *this = *this + other;
+	}
+
 	//Methods:
 	void info()const
 	{
@@ -65,32 +73,68 @@ public:
 	}
 };
 
+String operator+(const String& left, const String& right)
+{
+	int size = left.get_size() + right.get_size() - 1;
+	char* temp = new char[size] {};
+	for (int i = 0; i < left.get_size(); i++) 
+		temp[i] = left.get_str()[i];
+	for (int i = 0; i < right.get_size(); i++) 
+		temp[i+left.get_size()-1]= right.get_str()[i];
+	String result = temp;
+	return result;
+}
+
 std::ostream& operator<<(std::ostream& os, const String& obj)
 {
 	return os << obj.get_str();
 }
 
+std::istream& operator>>(std::istream& is, String& obj)
+{
+	const int SIZE = 32;
+	char sz_input[SIZE] = {};
+	is.getline(sz_input, SIZE);
+	String temp(sz_input);
+	obj= temp;
+	return is;
+}
+
 void main()
 {
 	setlocale(LC_ALL, "");
-	String str1(5);			//explicit-конструктор нельзя вызвать оператором '=', но всегда можно вызвать при помощи круглых скобок
-	str1.info();
+	//String str1(5);			//explicit-конструктор нельзя вызвать оператором '=', но всегда можно вызвать при помощи круглых скобок
+	//str1.info();
+	//cout << str1 << endl;
+
+	//cout << delimiter << endl;
+
+	//String str2 = "Hello";
+	//str2 = str2;
+	//cout << str2 << endl;
+
+	//cout << delimiter << endl;
+
+	//String str3 = str2;		//CopyConstructor
+	//cout << str3 << endl;
+
+	//cout << delimiter << endl;
+
+	//String str4;
+	//str4 = str3;
+	//cout << str4 << endl;
+
+	//cout << delimiter << endl;
+
+	//String str;
+	//cout << "Введите строку: "; cin >> str;
+	//cout << str << endl;
+
+	//cout << delimiter << endl;
+
+	String str1 = "Hello";
+	String str2 = "World";
+	str1 += str2;
 	cout << str1 << endl;
 
-	cout << delimiter << endl;
-
-	String str2 = "Hello";
-	str2 = str2;
-	cout << str2 << endl;
-
-	cout << delimiter << endl;
-
-	String str3 = str2;		//CopyConstructor
-	cout << str3 << endl;
-
-	cout << delimiter << endl;
-
-	String str4;
-	str4 = str3;
-	cout << str4 << endl;
 }

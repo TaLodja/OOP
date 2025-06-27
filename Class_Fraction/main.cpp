@@ -58,9 +58,19 @@ public:
 		this->denominator = 1;
 		cout << "SingleArgumentConstructor:\t\t" << this << endl;
 	}
-	explicit Fraction(double decimal)
+	Fraction(double decimal)
 	{
-
+		this->integer = 0;
+		this->numerator = decimal;
+		this->denominator = 1;
+		while (decimal - this->numerator > 0)
+		{
+			decimal *= 10;
+			this->numerator = decimal;
+			this->denominator *= 10;
+		}
+		this->reduct();
+		this->to_proper();
 	}
 	Fraction(int numerator, int denominator)
 	{
@@ -416,14 +426,16 @@ void main()
 	Fraction A = (Fraction)5;	//Implicit conversion from less to more ('int' to 'Fraction')
 	cout << A << endl;
 
+	cout << delimiter << endl;
+
 	Fraction B;
-	cout << delimiter << endl;
 	B = Fraction(8);
-	cout << delimiter << endl;
 	cout << B << endl;
 
+	cout << delimiter << endl;
+
 	Fraction C = 2.75;
-	cout << A << endl;
+	cout << C << endl;
 #endif // CONVERTION_FROM_OTHER_TO_CLASS
 
 #ifdef CONVERSION_FROM_CLASS_TO_OTHER
