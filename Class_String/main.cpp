@@ -19,6 +19,10 @@ public:
 	{
 		return str;
 	}
+	char* get_str()
+	{
+		return str;
+	}
 	//Constructors:
 	explicit String(int size = 80)
 	{
@@ -28,6 +32,7 @@ public:
 	}
 	String(const char str[])
 	{
+		size = 0;
 		while(str[size++]);
 		this->str = new char[size] {};
 		for (int i = 0; str[i]; i++) this->str[i] = str[i];
@@ -60,6 +65,16 @@ public:
 		return *this;
 	}
 
+	char operator[](int i)const
+	{
+		return str[i];
+	}
+
+	char& operator[](int i)
+	{
+		return str[i];
+	}
+
 	String& operator+=(const String& other)
 	{
 		return *this = *this + other;
@@ -75,14 +90,21 @@ public:
 
 String operator+(const String& left, const String& right)
 {
-	int size = left.get_size() + right.get_size() - 1;
+	String result (left.get_size() + right.get_size() - 1);
+	for (int i = 0; left[i]; i++)
+		result[i] = left[i];
+	for (int i = 0; right[i]; i++)
+		result[i+left.get_size() - 1] = right[i];
+	return result;
+
+	/*int size = left.get_size() + right.get_size() - 1;
 	char* temp = new char[size] {};
-	for (int i = 0; i < left.get_size(); i++) 
+	for (int i = 0; i < left.get_size()-1; i++) 
 		temp[i] = left.get_str()[i];
 	for (int i = 0; i < right.get_size(); i++) 
 		temp[i+left.get_size()-1]= right.get_str()[i];
 	String result = temp;
-	return result;
+	return result;*/
 }
 
 std::ostream& operator<<(std::ostream& os, const String& obj)
@@ -100,41 +122,47 @@ std::istream& operator>>(std::istream& is, String& obj)
 	return is;
 }
 
+//#define CONSTRUCTORS_CHECK
+
 void main()
 {
 	setlocale(LC_ALL, "");
-	//String str1(5);			//explicit-конструктор нельзя вызвать оператором '=', но всегда можно вызвать при помощи круглых скобок
-	//str1.info();
-	//cout << str1 << endl;
+#ifdef CONSTRUCTORS_CHECK
+	String str1(5);			//explicit-конструктор нельзя вызвать оператором '=', но всегда можно вызвать при помощи круглых скобок
+	str1.info();
+	cout << str1 << endl;
 
-	//cout << delimiter << endl;
+	cout << delimiter << endl;
 
-	//String str2 = "Hello";
-	//str2 = str2;
-	//cout << str2 << endl;
+	String str2 = "Hello";
+	str2 = str2;
+	cout << str2 << endl;
 
-	//cout << delimiter << endl;
+	cout << delimiter << endl;
 
-	//String str3 = str2;		//CopyConstructor
-	//cout << str3 << endl;
+	String str3 = str2;		//CopyConstructor
+	cout << str3 << endl;
 
-	//cout << delimiter << endl;
+	cout << delimiter << endl;
 
-	//String str4;
-	//str4 = str3;
-	//cout << str4 << endl;
-
-	//cout << delimiter << endl;
-
-	//String str;
-	//cout << "Введите строку: "; cin >> str;
-	//cout << str << endl;
-
-	//cout << delimiter << endl;
+	String str4;
+	str4 = str3;
+	cout << str4 << endl;
+#endif // CONSTRUCTORS_CHECK
 
 	String str1 = "Hello";
 	String str2 = "World";
+	String str3 = str1 + " " + str2;
+	cout << str3 << endl;
+
+	/*String str;
+	cout << "Введите строку: "; cin >> str;
+	cout << str << endl;*/
+
+
+	/*String str1 = "Hello";
+	String str2 = "World";
 	str1 += str2;
-	cout << str1 << endl;
+	cout << str1 << endl;*/
 
 }
