@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#include <Windows.h>		//Для вывода строки на русском
+#include <iostream>
 using namespace std;
 
 #define delimiter "\n----------------------------------\n"
@@ -114,15 +115,28 @@ std::ostream& operator<<(std::ostream& os, const String& obj)
 
 std::istream& operator>>(std::istream& is, String& obj)
 {
-	const int SIZE = 32;
+	const int SIZE = 1024; //Размер буфера - 1 kВ
+	char buffer[SIZE] = {};
+	is >> buffer;
+	//is.getline(buffer, SIZE);
+	obj = buffer;
+	return is;
+	/*const int SIZE = 32;
 	char sz_input[SIZE] = {};
 	is.getline(sz_input, SIZE);
 	String temp(sz_input);
 	obj= temp;
+	return is;*/
+}
+
+std::istream& getline(std::istream& is, String& obj)
+{
+	is.getline(obj.get_str(), obj.get_size());
 	return is;
 }
 
 //#define CONSTRUCTORS_CHECK
+//#define OPERATOR_PLUS
 
 void main()
 {
@@ -150,14 +164,21 @@ void main()
 	cout << str4 << endl;
 #endif // CONSTRUCTORS_CHECK
 
+#ifdef OPERATOR_PLUS
 	String str1 = "Hello";
 	String str2 = "World";
 	String str3 = str1 + " " + str2;
 	cout << str3 << endl;
+#endif // OPERATOR_PLUS
 
-	/*String str;
-	cout << "Введите строку: "; cin >> str;
-	cout << str << endl;*/
+	String str;
+	cout << "Введите строку: "; 
+	SetConsoleCP(1251);				//Для вывода строки на русском
+	//cin >> str;
+	//cin.getline(str.get_str(), str.get_size());
+	getline(cin, str);
+	SetConsoleCP(866);
+	cout << str << endl;
 
 
 	/*String str1 = "Hello";
