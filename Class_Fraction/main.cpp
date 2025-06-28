@@ -60,7 +60,14 @@ public:
 	}
 	Fraction(double decimal)
 	{
-		this->integer = 0;
+		decimal += 1e-10;
+		integer = decimal;  //Неявное преобразование типов из 'double' в  'int'
+		decimal -= integer;
+		denominator= 1e+9; //Максимально возможное значение числителя (9 десятичных разрядов)
+		numerator = decimal * denominator;
+		reduce();
+
+		/*this->integer = 0;
 		this->numerator = decimal;
 		this->denominator = 1;
 		while (decimal - this->numerator > 0)
@@ -69,8 +76,8 @@ public:
 			this->numerator = decimal;
 			this->denominator *= 10;
 		}
-		this->reduct();
-		this->to_proper();
+		this->reduce();
+		this->to_proper();*/
 	}
 	Fraction(int numerator, int denominator)
 	{
@@ -184,9 +191,31 @@ public:
 		swap(inverted.numerator, inverted.denominator); //swap - меняет две перемнные местами
 		return inverted;
 	}
-	Fraction& reduct()
+	Fraction& reduce()
 	{
-		int gcd1 = abs(numerator), gcd2 = abs(denominator);
+		int more, less, rest;
+		if (numerator < denominator)
+		{
+			less = numerator;
+			more = denominator;
+		}
+		else
+		{
+			more = numerator;
+			less = denominator;
+		}
+		do
+		{
+			rest = more % less;
+			more = less;
+			less = rest;
+		} while (rest);
+		int GCD = more; //GCD - Greatest Common Divisor
+		numerator /= GCD;
+		denominator /= GCD;
+		return *this;
+
+		/*int gcd1 = abs(numerator), gcd2 = abs(denominator);
 		if (gcd1 < gcd2) swap(gcd1, gcd2);
 		while (gcd2)
 		{
@@ -195,7 +224,7 @@ public:
 		}
 		numerator /= gcd1;
 		denominator /= gcd1;
-		return *this;
+		return *this;*/
 	}
 	void print()const
 	{
@@ -220,7 +249,7 @@ Fraction operator+(Fraction left, Fraction right)
 		{
 			left.get_numerator() * right.get_denominator() + right.get_numerator() * left.get_denominator(),
 			left.get_denominator() * right.get_denominator()
-		}.to_proper()).reduct();
+		}.to_proper()).reduce();
 }
 Fraction operator-(const Fraction& left, const Fraction& right)
 {
@@ -243,7 +272,7 @@ Fraction operator*(Fraction left, Fraction right)
 		{
 			left.get_numerator() * right.get_numerator(),
 			left.get_denominator() * right.get_denominator()
-		}.to_proper()).reduct();
+		}.to_proper()).reduce();
 }
 
 Fraction operator/(const Fraction& left, const Fraction& right)
@@ -338,7 +367,7 @@ std::istream& operator>>(std::istream& is, Fraction& obj)	//is - input stream
 //#define COMPARISON_OPERATORS
 //#define ISTREAM_OPERATOR
 //#define CONVERSIONS_BASICS
-#define CONVERTION_FROM_OTHER_TO_CLASS
+//#define CONVERTION_FROM_OTHER_TO_CLASS
 //#define CONVERSION_FROM_CLASS_TO_OTHER
 
 void main()
@@ -434,7 +463,7 @@ void main()
 
 	cout << delimiter << endl;
 
-	Fraction C = 2.75;
+	Fraction C = 0.3;
 	cout << C << endl;
 #endif // CONVERTION_FROM_OTHER_TO_CLASS
 
@@ -447,5 +476,8 @@ void main()
 	double b = A;
 	cout << b << endl;
 #endif // CONVERSION_FROM_CLASS_TO_OTHER
+
+	Fraction A = 2.75;
+	cout << A << endl;
 
 }
