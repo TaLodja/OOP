@@ -209,22 +209,7 @@ double FindDet(double** arr1, int n)
 		double d = 0;
 		for (int k = 0; k < n; k++)
 		{
-			double** cofactor = new double* [n-1];
-			for (int i = 0; i < n-1; i++)
-				cofactor[i] = new double[n-1];
-			for (int i = 1; i < n; i++)
-			{
-				for (int j = 0; j < n; j++)
-				{
-					if (j == k) continue;
-					else if (j < k) cofactor[i - 1][j] = arr1[i][j];
-					else cofactor[i - 1][j - 1] = arr1[i][j];
-				}
-			}
-			d += arr1[0][k]*algebraic_addition(arr1, 0, k, n);
-			for (int i = 0; i < n-1; i++)
-				delete[] cofactor[i];
-			delete[] cofactor;
+			d += arr1[0][k] * algebraic_addition(arr1, 0, k, n);
 		}
 		return d;
 	}
@@ -246,13 +231,17 @@ double algebraic_addition(double** arr1, int r, int c, int n)
 			else cofactor[i - 1][j - 1] = arr1[i][j];
 		}
 	}
-	return pow(-1, r+c) * FindDet(cofactor, n - 1);
+	double al_add = pow(-1, r + c) * FindDet(cofactor, n - 1);
+	for (int i = 0; i < n - 1; i++)
+		delete[] cofactor[i];
+	delete[] cofactor;
+	return al_add;
 }
 
 void main()
 {
 	setlocale(LC_ALL, "");
-	Matrix A(3, 3);
+	Matrix A(6, 6);
 	A.FillRand();
 	A.print();
 
