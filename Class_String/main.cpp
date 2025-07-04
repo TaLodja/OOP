@@ -1,6 +1,7 @@
 ﻿#include <Windows.h>		//Для вывода строки на русском
 #include <iostream>
 using namespace std;
+using std::cout;
 
 #define delimiter "\n----------------------------------\n"
 
@@ -46,9 +47,17 @@ public:
 		for (int i = 0; i<size; i++) this->str[i] = other.str[i];
 		cout << "CopyConstructor:\t" << this << endl;
 	}
+	String(String&& other)
+	{
+		this->size = other.size;
+		this->str = other.str;
+		other.size = 0;
+		other.str = nullptr;		//Защищаем память от удаления деструктором.
+		cout << "MoveConstructor\t\t" << this << endl;
+	}
 	~String()
 	{
-		if (str!=nullptr) delete[] str;
+		delete[] str;
 		this->str = nullptr;
 		this->size = 0;
 		cout << "Destructor:\t\t" << this << endl;
@@ -63,6 +72,18 @@ public:
 		this->str = new char[size] {};
 		for (int i = 0; i < size; i++) this->str[i] = other.str[i];
 		cout << "CopyAssignment:\t" << this << endl;
+		return *this;
+	}
+
+	String& operator=(String&& other)
+	{
+		if (this == &other) return *this;
+		delete[] this->str;
+		this->size = other.size;
+		this->str = other.str;
+		other.size - 0;
+		other.str = nullptr;  //Защизаем динамическую память от удаления в деструкторе
+		cout << "MoveAssignment:\t\t" << this << endl;
 		return *this;
 	}
 
@@ -91,11 +112,12 @@ public:
 
 String operator+(const String& left, const String& right)
 {
-	String result (left.get_size() + right.get_size() - 1);
+	String result (left.get_size() + right.get_size() - 1);		//Default constructor
 	for (int i = 0; left[i]; i++)
 		result[i] = left[i];
 	for (int i = 0; right[i]; i++)
 		result[i+left.get_size() - 1] = right[i];
+	cout << "Operator+" << endl;
 	return result;
 
 	/*int size = left.get_size() + right.get_size() - 1;
@@ -136,7 +158,8 @@ std::istream& getline(std::istream& is, String& obj)
 }
 
 //#define CONSTRUCTORS_CHECK
-//#define OPERATOR_PLUS
+#define OPERATOR_PLUS
+//#define ISTREAM_OPERATOR
 
 void main()
 {
@@ -167,18 +190,24 @@ void main()
 #ifdef OPERATOR_PLUS
 	String str1 = "Hello";
 	String str2 = "World";
-	String str3 = str1 + " " + str2;
+	cout << delimiter << endl;
+	String str3;
+	str3 = str1 + str2;
+	cout << delimiter << endl;
 	cout << str3 << endl;
 #endif // OPERATOR_PLUS
 
+#ifdef ISTREAM_OPERATOR
 	String str;
-	cout << "Введите строку: "; 
+	cout << "Введите строку: ";
 	SetConsoleCP(1251);				//Для вывода строки на русском
 	//cin >> str;
 	//cin.getline(str.get_str(), str.get_size());
 	getline(cin, str);
 	SetConsoleCP(866);
 	cout << str << endl;
+#endif // ISTREAM_OPERATOR
+
 
 
 	/*String str1 = "Hello";
