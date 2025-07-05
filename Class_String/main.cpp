@@ -34,6 +34,7 @@ public:
 	}
 	String(const char str[])
 	{
+		cout << typeid(str).name() << endl;
 		size = 0;
 		while(str[size++]);
 		this->str = new char[size] {};
@@ -158,7 +159,7 @@ std::istream& getline(std::istream& is, String& obj)
 }
 
 //#define CONSTRUCTORS_CHECK
-#define OPERATOR_PLUS
+//#define OPERATOR_PLUS
 //#define ISTREAM_OPERATOR
 
 void main()
@@ -214,5 +215,30 @@ void main()
 	String str2 = "World";
 	str1 += str2;
 	cout << str1 << endl;*/
+
+	String str1;		//Default constructor
+	str1.info();
+
+	String str2(8);		//Single-argument constructor ('int') 8 - размер строки в байтах;
+	str2.info();
+
+	String str3 = "Hello";	//Single-argument constructor ('const char*');
+	str3.info();
+	cout << typeid("Hello").name() << endl;
+
+	String str4();		//Здесь не вызывается никакой конструктор,
+						//и не создается никакой объект, здесь происходит
+						//объявление функции 'str4()', которая ничего не принимает
+						//и возвращает объект типа 'String'.
+	//Пустые () НЕ делают явный вызов DefaultConstructor.
+	//str4.info();
+	
+	//Ксли нужно явно вызвать DefaultConstructor, это можно сделать {}
+	String str5(8);	//Создается строка длиной 8 байт
+	String str6{ 8 }; //Создается строка длиной 8 байт, т.е. {} вызывают конструктор.
+	string str7{ }; //Явный вызов DefaultConstructor.
+	//!!!	{} следует использовать с осторожностью		!!!
+
+	String str9 = str3;		//CopyConstructor
 
 }
