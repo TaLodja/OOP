@@ -1,7 +1,8 @@
 ﻿#include <Windows.h>		//Для вывода строки на русском
 #include <iostream>
-using namespace std;
+using std::cin;
 using std::cout;
+using std::endl;
 
 #define delimiter "\n----------------------------------\n"
 
@@ -13,94 +14,116 @@ class String
 	int size;	//Размер строки в Байтах
 	char* str;	//Указатель на строку в динамической памяти
 public:
-	int get_size()const
-	{
-		return size;
-	}
-	const char* get_str()const
-	{
-		return str;
-	}
-	char* get_str()
-	{
-		return str;
-	}
+	int get_size()const;
+	const char* get_str()const;
+	char* get_str();
+
 	//Constructors:
-	explicit String(int size = 80) : size(size), str(new char[size] {})
-	{
-		cout << "DefaultConstructor:\t" << this << endl;
-	}
-	String(const char str[]) :String(strlen(str)+1)
-	{
-		for (int i = 0; str[i]; i++) this->str[i] = str[i];
-		cout << "Constructor:\t\t" << this << endl;
-	}
-	String(const String& other): String(other.str)
-	{
-		cout << "CopyConstructor:\t" << this << endl;
-	}
-	String(String&& other): size(other.size), str(other.str)
-	{
-		//this->size = other.size;
-		//this->str = other.str;
-		other.size = 0;
-		other.str = nullptr;		//Защищаем память от удаления деструктором.
-		cout << "MoveConstructor\t\t" << this << endl;
-	}
-	~String()
-	{
-		delete[] str;
-		this->str = nullptr;
-		this->size = 0;
-		cout << "Destructor:\t\t" << this << endl;
-	}
+	explicit String(int size = 80);
+	String(const char str[]);
+	String(const String& other);
+	String(String&& other);
+	~String();
 
 	//Operatprs:
-	String& operator=(const String& other)
-	{
-		if (this == &other) return *this;
-		delete[] this->str;
-		this->size = other.size;
-		this->str = new char[size] {};
-		for (int i = 0; i < size; i++) this->str[i] = other.str[i];
-		cout << "CopyAssignment:\t" << this << endl;
-		return *this;
-	}
-
-	String& operator=(String&& other)
-	{
-		if (this == &other) return *this;
-		delete[] this->str;
-		this->size = other.size;
-		this->str = other.str;
-		other.size - 0;
-		other.str = nullptr;  //Защизаем динамическую память от удаления в деструкторе
-		cout << "MoveAssignment:\t\t" << this << endl;
-		return *this;
-	}
-
-	char operator[](int i)const
-	{
-		return str[i];
-	}
-
-	char& operator[](int i)
-	{
-		return str[i];
-	}
-
-	String& operator+=(const String& other)
-	{
-		return *this = *this + other;
-	}
+	String& operator=(const String& other);
+	String& operator=(String&& other);
+	char operator[](int i)const;
+	char& operator[](int i);
+	String& operator+=(const String& other);
 
 	//Methods:
-	void info()const
-	{
-		cout << "Size:\t" << size << endl;
-		cout << "Str:\t" << str << endl;
-	}
+	void info()const;
 };
+int String::get_size()const
+{
+	return size;
+}
+const char* String::get_str()const
+{
+	return str;
+}
+char* String::get_str()
+{
+	return str;
+}
+//Constructors:
+//Ключевое слово 'explicit' можно использовать только внутри класса
+String::String(int size) : size(size), str(new char[size] {})
+{
+	cout << "DefaultConstructor:\t" << this << endl;
+}
+//	:: - Scope operator (Оператор разрешения видимости)
+String::String(const char str[]) :String(strlen(str) + 1)
+{
+	for (int i = 0; str[i]; i++) this->str[i] = str[i];
+	cout << "Constructor:\t\t" << this << endl;
+}
+String::String(const String& other) : String(other.str)
+{
+	cout << "CopyConstructor:\t" << this << endl;
+}
+String::String(String&& other) : size(other.size), str(other.str)
+{
+	//this->size = other.size;
+	//this->str = other.str;
+	other.size = 0;
+	other.str = nullptr;		//Защищаем память от удаления деструктором.
+	cout << "MoveConstructor\t\t" << this << endl;
+}
+String::~String()
+{
+	delete[] str;
+	this->str = nullptr;
+	this->size = 0;
+	cout << "Destructor:\t\t" << this << endl;
+}
+
+//Operatprs:
+String& String::operator=(const String& other)
+{
+	if (this == &other) return *this;
+	delete[] this->str;
+	this->size = other.size;
+	this->str = new char[size] {};
+	for (int i = 0; i < size; i++) this->str[i] = other.str[i];
+	cout << "CopyAssignment:\t" << this << endl;
+	return *this;
+}
+
+String& String::operator=(String&& other)
+{
+	if (this == &other) return *this;
+	delete[] this->str;
+	this->size = other.size;
+	this->str = other.str;
+	other.size - 0;
+	other.str = nullptr;  //Защизаем динамическую память от удаления в деструкторе
+	cout << "MoveAssignment:\t\t" << this << endl;
+	return *this;
+}
+
+char String::operator[](int i)const
+{
+	return str[i];
+}
+
+char& String::operator[](int i)
+{
+	return str[i];
+}
+
+String& String::operator+=(const String& other)
+{
+	return *this = *this + other;
+}
+
+//Methods:
+void String::info()const
+{
+	cout << "Size:\t" << size << endl;
+	cout << "Str:\t" << str << endl;
+}
 
 String operator+(const String& left, const String& right)
 {
@@ -111,15 +134,6 @@ String operator+(const String& left, const String& right)
 		result[i + left.get_size() - 1] = right[i];
 	cout << "Operator+" << endl;
 	return result;
-
-	/*int size = left.get_size() + right.get_size() - 1;
-	char* temp = new char[size] {};
-	for (int i = 0; i < left.get_size()-1; i++)
-		temp[i] = left.get_str()[i];
-	for (int i = 0; i < right.get_size(); i++)
-		temp[i+left.get_size()-1]= right.get_str()[i];
-	String result = temp;
-	return result;*/
 }
 
 std::ostream& operator<<(std::ostream& os, const String& obj)
