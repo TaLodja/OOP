@@ -26,32 +26,33 @@ public:
 		return str;
 	}
 	//Constructors:
-	explicit String(int size = 80)
+	explicit String(int size = 80) : size(size), str(new char[size] {})
 	{
-		this->size = size;
-		this->str = new char[size] {};
+		//this->size = size;
+		//this->str = new char[size] {};
 		cout << "DefaultConstructor:\t" << this << endl;
 	}
-	String(const char str[])
+	String(const char str[]) :size(strlen(str) + 1), str(new char[size] {})
+		//strlen() - возвращает ддину строки
 	{
 		cout << typeid(str).name() << endl;
-		size = 0;
-		while(str[size++]);
-		this->str = new char[size] {};
+		//size = 0;
+		//while(str[size++]);
+		//this->str = new char[size] {};
 		for (int i = 0; str[i]; i++) this->str[i] = str[i];
 		cout << "Constructor:\t\t" << this << endl;
 	}
-	String(const String& other)
+	String(const String& other): size(other.size), str(new char[size] {})
 	{
-		this->size = other.size;
-		this->str = new char[size] {};
-		for (int i = 0; i<size; i++) this->str[i] = other.str[i];
+		//this->size = other.size;
+		//this->str = new char[size] {};
+		for (int i = 0; i < size; i++) this->str[i] = other.str[i];
 		cout << "CopyConstructor:\t" << this << endl;
 	}
-	String(String&& other)
+	String(String&& other): size(other.size), str(other.str)
 	{
-		this->size = other.size;
-		this->str = other.str;
+		//this->size = other.size;
+		//this->str = other.str;
 		other.size = 0;
 		other.str = nullptr;		//Защищаем память от удаления деструктором.
 		cout << "MoveConstructor\t\t" << this << endl;
@@ -113,19 +114,19 @@ public:
 
 String operator+(const String& left, const String& right)
 {
-	String result (left.get_size() + right.get_size() - 1);		//Default constructor
+	String result(left.get_size() + right.get_size() - 1);		//Default constructor
 	for (int i = 0; left[i]; i++)
 		result[i] = left[i];
 	for (int i = 0; right[i]; i++)
-		result[i+left.get_size() - 1] = right[i];
+		result[i + left.get_size() - 1] = right[i];
 	cout << "Operator+" << endl;
 	return result;
 
 	/*int size = left.get_size() + right.get_size() - 1;
 	char* temp = new char[size] {};
-	for (int i = 0; i < left.get_size()-1; i++) 
+	for (int i = 0; i < left.get_size()-1; i++)
 		temp[i] = left.get_str()[i];
-	for (int i = 0; i < right.get_size(); i++) 
+	for (int i = 0; i < right.get_size(); i++)
 		temp[i+left.get_size()-1]= right.get_str()[i];
 	String result = temp;
 	return result;*/
@@ -159,8 +160,9 @@ std::istream& getline(std::istream& is, String& obj)
 }
 
 //#define CONSTRUCTORS_CHECK
-//#define OPERATOR_PLUS
+#define OPERATOR_PLUS
 //#define ISTREAM_OPERATOR
+//#define CALLING_CONSTRUCTORS
 
 void main()
 {
@@ -216,6 +218,7 @@ void main()
 	str1 += str2;
 	cout << str1 << endl;*/
 
+#ifdef CALLING_CONSTRUCTORS
 	String str1;		//Default constructor
 	str1.info();
 
@@ -227,18 +230,20 @@ void main()
 	cout << typeid("Hello").name() << endl;
 
 	String str4();		//Здесь не вызывается никакой конструктор,
-						//и не создается никакой объект, здесь происходит
-						//объявление функции 'str4()', которая ничего не принимает
-						//и возвращает объект типа 'String'.
-	//Пустые () НЕ делают явный вызов DefaultConstructor.
-	//str4.info();
-	
-	//Ксли нужно явно вызвать DefaultConstructor, это можно сделать {}
+	//и не создается никакой объект, здесь происходит
+	//объявление функции 'str4()', которая ничего не принимает
+	//и возвращает объект типа 'String'.
+//Пустые () НЕ делают явный вызов DefaultConstructor.
+//str4.info();
+
+//Ксли нужно явно вызвать DefaultConstructor, это можно сделать {}
 	String str5(8);	//Создается строка длиной 8 байт
 	String str6{ 8 }; //Создается строка длиной 8 байт, т.е. {} вызывают конструктор.
 	string str7{ }; //Явный вызов DefaultConstructor.
 	//!!!	{} следует использовать с осторожностью		!!!
 
 	String str9 = str3;		//CopyConstructor
+	str9.info();
+#endif // CALLING_CONSTRUCTORS
 
 }
