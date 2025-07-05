@@ -6,6 +6,12 @@ using std::endl;
 
 #define delimiter "\n----------------------------------\n"
 
+//////////////////////////////////////////////////////////
+//			Объявление класса - Class declaration		//
+
+class String;
+String operator+(const String& left, const String& right);
+
 class String;
 String operator+(const String& left, const String& right);
 
@@ -28,13 +34,22 @@ public:
 	//Operatprs:
 	String& operator=(const String& other);
 	String& operator=(String&& other);
+	String& operator+=(const String& other);
 	char operator[](int i)const;
 	char& operator[](int i);
-	String& operator+=(const String& other);
 
 	//Methods:
 	void info()const;
 };
+
+//			Конец объявления класса - Class declaration	end		//
+//////////////////////////////////////////////////////////////////
+
+///------------------------------------------------------------///
+
+//////////////////////////////////////////////////////////
+//			Определение класса - Class definition		//
+
 int String::get_size()const
 {
 	return size;
@@ -103,6 +118,11 @@ String& String::operator=(String&& other)
 	return *this;
 }
 
+String& String::operator+=(const String& other)
+{
+	return *this = *this + other;
+}
+
 char String::operator[](int i)const
 {
 	return str[i];
@@ -111,11 +131,6 @@ char String::operator[](int i)const
 char& String::operator[](int i)
 {
 	return str[i];
-}
-
-String& String::operator+=(const String& other)
-{
-	return *this = *this + other;
 }
 
 //Methods:
@@ -162,6 +177,9 @@ std::istream& getline(std::istream& is, String& obj)
 	is.getline(obj.get_str(), obj.get_size());
 	return is;
 }
+
+//			Конец определения класса - Class definition	end		//
+//////////////////////////////////////////////////////////////////
 
 //#define CONSTRUCTORS_CHECK
 #define OPERATOR_PLUS
