@@ -24,35 +24,20 @@ public:
 	}
 
 	//Constructors:
-	Matrix(int rows = 5, int cols = 5)
+	Matrix(int rows = 5, int cols = 5): rows(rows), cols(cols), matr(new double* [rows])
 	{
-		this->rows = rows;
-		this->cols = cols;
-		this->matr = new double* [rows];
-		for (int i = 0; i < rows; i++)
-		{
-			matr[i] = new double[cols] {};
-		}
+		Allocate();
 		cout << "Constructor:\t\t" << this << endl;
 	}
 
-	Matrix(const Matrix& other)
+	Matrix(const Matrix& other):Matrix(other.rows, other.cols)
 	{
-		this->rows = other.rows;
-		this->cols = other.cols;
-		this->matr = new double* [rows];
-		for (int i = 0; i < rows; i++)
-		{
-			this->matr[i] = other.matr[i];
-		}
+		CopyElements(other);
 		cout << "CopyConstructor:\t" << this << endl;
 	}
 
-	Matrix(Matrix&& other)
+	Matrix(Matrix&& other): rows(other.rows), cols(other.cols), matr(other.matr)
 	{
-		this->rows = other.rows;
-		this->cols = other.cols;
-		this->matr = other.matr;
 		other.rows = 0;
 		other.cols = 0;
 		other.matr = nullptr;
@@ -73,16 +58,26 @@ public:
 		this->rows = other.rows;
 		this->cols = other.cols;
 		this->matr = new double* [rows];
-		for (int i = 0; i < rows; i++)
-		{
-			this->matr[i] = new double[cols] {};
-		}
-		for (int i = 0; i < rows; i++)
-			for (int j = 0; j < cols; j++)
-				this->matr[i][j] = other.matr[i][j];
-		cout << "CopyAssignment\t" << this << endl;
+		Allocate();
+		CopyElements(other);
+		cout << "CopyAssignment\t\t" << this << endl;
 		return *this;
 	}
+
+	Matrix& operator=(Matrix&& other)
+	{
+		if (this == &other) return *this;
+		Clear();
+		this->rows = other.rows;
+		this->cols = other.cols;
+		this->matr = other.matr;
+		other.rows = 0;
+		other.cols = 0;
+		other.matr = nullptr;
+		cout << "MoveAssignment\t\t" << this << endl;
+		return *this;
+	}
+
 	double* operator[](int index)
 	{
 		return matr[index];
@@ -93,6 +88,19 @@ public:
 	}
 
 	//Methods:
+	void Allocate()
+	{		
+		for (int i = 0; i < rows; i++)
+		{
+			this->matr[i] = new double[cols] {};
+		}
+	}
+	void CopyElements(const Matrix& other)
+	{
+		for (int i = 0; i < rows; i++)
+			for (int j = 0; j < cols; j++)
+				matr[i][j] = other.matr[i][j];
+	}
 	void Clear()
 	{
 		for (int i = 0; i < rows; i++)
@@ -108,7 +116,7 @@ public:
 		{
 			for (int j = 0; j < cols; j++)
 			{
-				cout << matr[i][j] << "\t";
+				cout << matr[i][j] << "\t\t";
 			}
 			cout << endl;
 		}
@@ -193,7 +201,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix& obj)
 	{
 		for (int j = 0; j < obj.get_cols(); j++)
 		{
-			cout << obj[i][j] << "\t";
+			cout << obj[i][j] << "\t\t";
 		}
 		os << endl;
 	}
@@ -241,7 +249,7 @@ double algebraic_addition(double** arr1, int r, int c, int n)
 void main()
 {
 	setlocale(LC_ALL, "");
-	Matrix A(6, 6);
+	Matrix A(3, 3);
 	A.FillRand();
 	A.print();
 
@@ -249,14 +257,28 @@ void main()
 
 	cout << A.determinant() << endl;
 
-	cout << A.inverse() << endl;
+	//cout << A.inverse() << endl;
 
 	//cout << A.transpose() << endl;
-	/*Matrix B(3, 3);
+	Matrix B(3, 3);
 	B.FillRand();
 	B.print();
 
 	cout << delimiter << endl;
 	Matrix C = A * B;
-	cout << C << endl;*/
+	cout << C << endl;
+
+	cout << delimiter << endl;
+	Matrix D;
+	D = A;
+	cout << D << endl;
+
+	cout << delimiter << endl;
+	Matrix E;
+	E = A * 5;
+	cout << E << endl;
+
+	cout << delimiter << endl;
+	Matrix F = A;
+	cout << F << endl;
 }
